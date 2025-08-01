@@ -1020,7 +1020,7 @@
               <h3>Contactez-nous</h3>
               <p>Pour nous joindre, vous pouvez remplir ce formulaire et nous l'envoyer. Nous l'analyserons et vous ferons un retour dans les plus brefs délais. Cordialement!</p>
 
-              <form action="https://formsubmit.co/biwismakou@gmail.com" method="post" class="php-email-form"> <!--class="php-email-form"-->
+              <form id="contactForm" action="https://formsubmit.co/biwismakou@gmail.com" method="post"> <!--class="php-email-form"-->
                 <div class="row gy-4">
 
                   <div class="col-md-6">
@@ -1039,13 +1039,17 @@
                     <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
                   </div>
 
+
                   <div class="col-12 text-center">
-                    <!--<div class="loading">Chargement</div>
-                    <div class="error-message"></div>
-                    <div class="sent-message">Votre message a été envoyé. Merci!</div>-->
+                    
+                    <!-- Champ caché qui affichera le message de confirmation -->
+                    <div id="confirmationMessage" class="alert alert-success mt-3" style="display: none;">
+                      ✅ Votre message a bien été envoyé. Merci !
+                    </div>
 
                     <button type="submit" class="btn">Envoyer Message</button>
                   </div>
+  
 
                 </div>
               </form>
@@ -1130,6 +1134,38 @@
   <script src="imagesloaded.pkgd.min.js"></script>
   <script src="glightbox.min.js"></script>
   <script src="swiper-bundle.min.js"></script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("contactForm");
+    const confirmation = document.getElementById("confirmationMessage");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault(); // Empêche l'envoi automatique du formulaire
+
+      // Envoie manuel avec fetch (AJAX vers Formsubmit)
+      const formData = new FormData(form);
+      fetch(form.action, {
+        method: "POST",
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          form.reset(); // Réinitialise les champs
+          confirmation.style.display = "block"; // Affiche le message
+        } else {
+          confirmation.innerText = "❌ Une erreur s'est produite.";
+          confirmation.style.display = "block";
+        }
+      }).catch(error => {
+        confirmation.innerText = "⚠️ Erreur réseau.";
+        confirmation.style.display = "block";
+      });
+    });
+  });
+</script>
+
 
   <!-- Main JS File -->
   <script src="main.js"></script>
